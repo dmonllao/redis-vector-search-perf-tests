@@ -1,0 +1,66 @@
+name: Redis Cluster and Single Instance Search
+
+on: [push]
+
+jobs:
+  run-redis-search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: System info
+      run: |
+        cat /proc/cpuinfo
+        lscpu
+        cat /proc/cpuinfo | grep processor
+        sudo dmidecode | grep  "Max Speed"
+
+    - name: Build the Redis cluster image
+      run: docker compose -f docker-compose.redis-cluster-swarm.yml build
+
+    - name: Init swarm
+      run: docker swarm init
+
+    - name: Deploy Redis Cluster Stack
+      run: |
+        docker stack deploy -c docker-compose.redis-cluster-swarm.yml redis-cluster
+        sleep 20
+        docker ps
+        docker service ls
+        docker service logs redis-cluster_redis_search_cluster
+        docker service ps redis-cluster_redis_search_cluster
+
+    - name: Start Single Redis Instance
+      run: |
+        docker compose -f docker-compose.redis-single-instance.yml up -d
+        docker exec redis-vector-search-perf-tests-redis_single_instance-1 redis-cli info && docker logs redis-vector-search-perf-tests-redis_single_instance-1
+
+    - name: Sequential vector search on Redis cluster
+      run: |
+        docker run --rm --env REDIS_TEST_USE_CLUSTER=1 --name vector-search-test --network redis_cluster_test_network_boy -v "$(pwd):/app" python:3.11 sh -c "pip install 'redis[hiredis]==5.0.*' && pip install numpy && python3 /app/vector-search.py"
+        CONTAINER_ID=$(docker ps --filter "name=redis-cluster_redis-stack-1" --format "{{.ID}}" | head -n 1) && docker exec $CONTAINER_ID redis-cli info && docker logs $CONTAINER_ID
+
+    - name: Sequential vector search on single Redis instance
+      run: |
+        python3 -m venv venv
+        source venv/bin/activate
+        pip install "redis[hiredis]==5.0.*"
+        pip install numpy
+        python3 vector-search.py
+
+    - name: Concurrent vector search on Redis cluster
+      run: |
+        docker run --rm --env REDIS_TEST_USE_CLUSTER=1 --env REDIS_TEST_CONCURRENT_SEARCH=1 --name vector-search-test --network redis_cluster_test_network_boy -v "$(pwd):/app" python:3.11 sh -c "pip install 'redis[hiredis]==5.0.*' && pip install numpy && python3 /app/vector-search.py"
+        CONTAINER_ID=$(docker ps --filter "name=redis-cluster_redis-stack-1" --format "{{.ID}}" | head -n 1) && docker exec $CONTAINER_ID redis-cli info && docker logs $CONTAINER_ID
+
+    - name: Concurrent vector search on single Redis instance
+      run: |
+        python3 -m venv venv
+        source venv/bin/activate
+        pip install "redis[hiredis]==5.0.*"
+        pip install numpy
+        REDIS_TEST_CONCURRENT_SEARCH=1 python3 vector-search.py
+        docker exec redis-vector-search-perf-tests-redis_single_instance-1 redis-cli info && docker logs redis-vector-search-perf-tests-redis_single_instance-1

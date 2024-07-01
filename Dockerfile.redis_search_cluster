@@ -1,0 +1,18 @@
+FROM redis/redis-stack-server:7.2.0-v11
+
+RUN apt update && apt install -y git net-tools && apt clean && rm -rf /var/cache/apt/archives && rm -rf /var/lib/apt/lists/*
+
+# We need to build redis search from the sources to get the RSCoordinator so that redis search works well on a cluster
+# v2.8.14 is the redis search version for the version of the redis-stack-server we use https://github.com/redis-stack/redis-stack/blob/v7.2.0-v11/config.yml#L9
+# These commands below are based on https://redis.io/docs/latest/develop/interact/search-and-query/deprecated/development/#building-from-source
+RUN git clone --recursive https://github.com/RediSearch/RediSearch.git
+RUN cd RediSearch && git checkout v2.8.14
+# Here we remove the 'sudo' param from ./install_script.sh because we are already sudo
+RUN cd RediSearch/.install/ && ./install_script.sh && ./install_boost.sh 1.83.0 && apt clean && rm -rf /var/cache/apt/archives /var/lib/apt/lists/*
+# /opt/redis-stack/lib/redisearch-coord-custom-build.so is the library that we reference in redis-search-cluster-start-server.sh
+RUN cd RediSearch && make setup && make build COORD=1 DEBUG=0 NO_TESTS=1 WHY=0 VG=0 SLOW=0 && cp bin/linux-x64-release/coord-oss/module-oss.so /opt/redis-stack/lib/redisearch-coord-custom-build.so && make clean ALL=1
+
+COPY redis-start-server-in-cluster.sh ./redis-start-server-in-cluster.sh
+RUN chmod +x redis-start-server-in-cluster.sh
+
+CMD [ "./redis-start-server-in-cluster.sh" ]

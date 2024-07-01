@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  redis_single_instance:
+    image: redis/redis-stack-server:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:
+
+networks:
+  redis_cluster_net:
+    name: redis_cluster_test_network_boy_single

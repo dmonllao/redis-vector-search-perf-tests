@@ -1,0 +1,281 @@
+version: "3.8"
+
+services:
+  # It just initialises the search cluster. The name could be more representative but we want to have just 1 image for this.
+  redis_search_cluster:
+    image: test-redis_search_cluster
+    build:
+      context: .
+      dockerfile: Dockerfile.redis_search_cluster
+#    command: 'redis-cli --cluster create redis-stack-1:6379 redis-stack-2:6379 redis-stack-3:6379 --cluster-replicas 0 --cluster-yes'
+    command: 'redis-cli --cluster create redis-stack-1:6379 redis-stack-2:6379 redis-stack-3:6379 redis-stack-4:6379 redis-stack-5:6379 redis-stack-6:6379 redis-stack-7:6379 redis-stack-8:6379 redis-stack-9:6379 redis-stack-10:6379 redis-stack-11:6379 redis-stack-12:6379 redis-stack-13:6379 redis-stack-14:6379 redis-stack-15:6379 redis-stack-16:6379 --cluster-replicas 0 --cluster-yes'
+    depends_on:
+      - redis-stack-1
+      - redis-stack-2
+      - redis-stack-3
+      - redis-stack-4
+      - redis-stack-5
+      - redis-stack-6
+      - redis-stack-7
+      - redis-stack-8
+      - redis-stack-9
+      - redis-stack-10
+      - redis-stack-11
+      - redis-stack-12
+      - redis-stack-13
+      - redis-stack-14
+      - redis-stack-15
+      - redis-stack-16
+    networks:
+      - redis_cluster_net
+
+  redis-stack-1:
+    image: test-redis_search_cluster
+    ports:
+      - 6379
+      - 16379
+    networks:
+      - redis_cluster_net
+    volumes:
+      - redis-data-1:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  redis-stack-2:
+    image: test-redis_search_cluster
+    ports:
+      - 6379
+      - 16379
+    networks:
+      - redis_cluster_net
+    volumes:
+      - redis-data-2:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  redis-stack-3:
+    image: test-redis_search_cluster
+    ports:
+      - 6379
+      - 16379
+    networks:
+      - redis_cluster_net
+    volumes:
+      - redis-data-3:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  redis-stack-4:
+    image: test-redis_search_cluster
+    ports:
+      - 6379
+      - 16379
+    networks:
+      - redis_cluster_net
+    volumes:
+      - redis-data-4:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  redis-stack-5:
+    image: test-redis_search_cluster
+    ports:
+      - 6379
+      - 16379
+    networks:
+      - redis_cluster_net
+    volumes:
+      - redis-data-5:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  redis-stack-6:
+    image: test-redis_search_cluster
+    ports:
+      - 6379
+      - 16379
+    networks:
+      - redis_cluster_net
+    volumes:
+      - redis-data-6:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  redis-stack-7:
+    image: test-redis_search_cluster
+    ports:
+      - 6379
+      - 16379
+    networks:
+      - redis_cluster_net
+    volumes:
+      - redis-data-7:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  redis-stack-8:
+    image: test-redis_search_cluster
+    ports:
+      - 6379
+      - 16379
+    networks:
+      - redis_cluster_net
+    volumes:
+      - redis-data-8:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  redis-stack-9:
+    image: test-redis_search_cluster
+    ports:
+      - 6379
+      - 16379
+    networks:
+      - redis_cluster_net
+    volumes:
+      - redis-data-9:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  redis-stack-10:
+    image: test-redis_search_cluster
+    ports:
+      - 6379
+      - 16379
+    networks:
+      - redis_cluster_net
+    volumes:
+      - redis-data-10:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  redis-stack-11:
+    image: test-redis_search_cluster
+    ports:
+      - 6379
+      - 16379
+    networks:
+      - redis_cluster_net
+    volumes:
+      - redis-data-11:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  redis-stack-12:
+    image: test-redis_search_cluster
+    ports:
+      - 6379
+      - 16379
+    networks:
+      - redis_cluster_net
+    volumes:
+      - redis-data-12:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  redis-stack-13:
+    image: test-redis_search_cluster
+    ports:
+      - 6379
+      - 16379
+    networks:
+      - redis_cluster_net
+    volumes:
+      - redis-data-13:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  redis-stack-14:
+    image: test-redis_search_cluster
+    ports:
+      - 6379
+      - 16379
+    networks:
+      - redis_cluster_net
+    volumes:
+      - redis-data-14:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  redis-stack-15:
+    image: test-redis_search_cluster
+    ports:
+      - 6379
+      - 16379
+    networks:
+      - redis_cluster_net
+    volumes:
+      - redis-data-15:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  redis-stack-16:
+    image: test-redis_search_cluster
+    ports:
+      - 6379
+      - 16379
+    networks:
+      - redis_cluster_net
+    volumes:
+      - redis-data-16:/data
+    deploy:
+      mode: replicated
+      replicas: 1
+
+volumes:
+  redis-data-1:
+    name: redis_data_1
+  redis-data-2:
+    name: redis_data_2
+  redis-data-3:
+    name: redis_data_3
+  redis-data-4:
+    name: redis_data_4
+  redis-data-5:
+    name: redis_data_5
+  redis-data-6:
+    name: redis_data_6
+  redis-data-7:
+    name: redis_data_7
+  redis-data-8:
+    name: redis_data_8
+  redis-data-9:
+    name: redis_data_9
+  redis-data-10:
+    name: redis_data_10
+  redis-data-11:
+    name: redis_data_11
+  redis-data-12:
+    name: redis_data_12
+  redis-data-13:
+    name: redis_data_13
+  redis-data-14:
+    name: redis_data_14
+  redis-data-15:
+    name: redis_data_15
+  redis-data-16:
+    name: redis_data_16
+
+networks:
+  redis_cluster_net:
+    name: redis_cluster_test_network_boy
+    attachable: true
+    driver: overlay
+    ipam:
+      config:
+        - subnet: 120.4.0.0/16
