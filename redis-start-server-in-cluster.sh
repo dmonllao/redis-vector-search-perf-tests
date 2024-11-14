@@ -1,8 +1,11 @@
 #!/bin/bash
 
-replica_ip=$(ifconfig eth1 | grep 'inet ' | awk '{print $2}')
+# If the pattern is not found nothing (development deployment) an empty string is sent
+# for --cluster-announce-ip which is fine
+ippattern='10.0.9'
+replica_ip=$(ifconfig | grep 'inet ' | grep $ippattern | awk '{print $2}')
 echo "${replica_ip}" > ./info-replica-ip
-echo "IP: ${replica_ip}"
+echo "Detected IP in pattern $ippattern: ${replica_ip}"
 
 # We need to manually add the loaded libraries if we overwrite the redis-server command.
 # Save a backup every N seconds if there are M changes in the dataset

@@ -278,4 +278,7 @@ networks:
     driver: overlay
     ipam:
       config:
-        - subnet: 120.4.0.0/16
+        # https://docs.docker.com/engine/swarm/networking/#configure-the-subnet-and-gateway
+        # This is referenced in redis-start-server-in-cluster.sh, where we set the value
+        # for --cluster-announce-ip to the ip of this interface
+        - subnet: 10.0.9.0/24

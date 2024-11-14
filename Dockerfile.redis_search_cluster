@@ -1,6 +1,6 @@
 FROM redis/redis-stack-server:7.2.0-v11
 
-RUN apt update && apt install -y git net-tools && apt clean && rm -rf /var/cache/apt/archives && rm -rf /var/lib/apt/lists/*
+RUN apt update && apt install -y git net-tools libuv1 && apt clean && rm -rf /var/cache/apt/archives && rm -rf /var/lib/apt/lists/*
 
 # We need to build redis search from the sources to get the RSCoordinator so that redis search works well on a cluster
 # v2.8.14 is the redis search version for the version of the redis-stack-server we use https://github.com/redis-stack/redis-stack/blob/v7.2.0-v11/config.yml#L9

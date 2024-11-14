@@ -29,7 +29,7 @@ use_cluster = bool(os.getenv('REDIS_TEST_USE_CLUSTER', False))
 
 n_embeddings = int(os.getenv('REDIS_TEST_N_EMBEDDINGS', 1000000))
 batch_size = 250000
-n_search_vector_rounds = 1000
+n_search_vector_rounds = 200
 n_parallel_requests = 50
 
 format = '%(asctime)s %(message)s'
