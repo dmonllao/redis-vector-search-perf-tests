@@ -1,3 +1,4 @@
+Tool to compare the performance of redis search
 
 ### Start the redis cluster and the single node instance
 
