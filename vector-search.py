@@ -196,4 +196,4 @@ else:
 duration = datetime.now() - start
 
 logging.info(f'Average time to search 1 vector (misleading results on concurrent): {statistics.mean(list_of_search_times)}s\tStandard Deviation: {statistics.stdev(list_of_search_times)}s')
-logging.info(f'Total search time for {n_search_vector_rounds}: {duration.total_seconds()}s')
+logging.info(f'Total search time for {n_search_vector_rounds} search queries of 1 vector: {duration.total_seconds()}s')
