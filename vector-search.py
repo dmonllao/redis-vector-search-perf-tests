@@ -71,7 +71,7 @@ def get_index_definition():
     schema = (
         TextField("id"),  # Tag Field Name
         VectorField("embedding",  # Vector Field Name
-                    "FLAT", {  # Vector Index Type: FLAT or HNSW
+                    "HNSW", {  # Vector Index Type: FLAT or HNSW
                         "TYPE": "FLOAT32",  # FLOAT32 or FLOAT64
                         "DIM": embedding_size,  # Number of Vector Dimensions
                         "DISTANCE_METRIC": "COSINE",  # Vector Search Distance Metric
